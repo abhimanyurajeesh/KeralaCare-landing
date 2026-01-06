@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Color variables with HSL fallbacks for older browsers */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -62,7 +63,72 @@
   * {
     @apply border-border;
   }
+  
+  /* Improved base styles for older browsers */
+  html {
+    /* Smooth scrolling with fallback */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    /* Add explicit fallback colors for very old browsers */
+    background-color: #ffffff;
+    color: #0a0a0b;
+    /* Improve font rendering on older browsers */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Ensure images are responsive in older browsers */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Add box-sizing for older browsers that need it */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+/* Polyfills and fallbacks for older browsers */
+@layer utilities {
+  /* Flexbox fallbacks */
+  .flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  
+  /* Grid fallback for IE11 */
+  @supports not (display: grid) {
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+  
+  /* Sticky positioning fallback */
+  @supports not (position: sticky) {
+    .sticky {
+      position: -webkit-sticky;
+      position: relative;
+    }
+  }
+  
+  /* Object-fit fallback */
+  @supports not (object-fit: cover) {
+    img[class*="object-cover"],
+    img[class*="object-contain"] {
+      width: 100%;
+      height: auto;
+    }
   }
 }
