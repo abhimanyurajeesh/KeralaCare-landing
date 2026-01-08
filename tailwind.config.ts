@@ -2,13 +2,17 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./locales/**/*.{js,ts,jsx,tsx,mdx,json}",
   ],
+  // Configure for older browser compatibility
+  future: {
+    hoverOnlyWhenSupported: true, // Only apply hover styles when supported
+  },
   theme: {
     extend: {
       fontFamily: {

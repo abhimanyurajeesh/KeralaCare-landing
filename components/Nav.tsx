@@ -8,9 +8,10 @@ import { useI18n } from "@/lib/i18n";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Nav() {
-  const { t, language, setLanguage } = useI18n();
+  const { t, language } = useI18n();
   const [shrinked, setShrinked] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const pathname = usePathname();
@@ -98,13 +99,11 @@ export function Nav() {
               {item.label}
             </Link>
           ))}
-          <Button
+          <LanguageSwitcher 
+            currentLanguage={language}
             variant="link"
             className="text-white hover:text-primary-100 text-base"
-            onClick={() => setLanguage(language === "en" ? "ml" : "en")}
-          >
-            {language === "en" ? "മലയാളം" : "English"}
-          </Button>
+          />
         </div>
 
         {/* Mobile Menu Button */}
@@ -113,6 +112,7 @@ export function Nav() {
           size="icon"
           className="lg:hidden text-white hover:text-primary focus:bg-transparent"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
             <X className="h-6 w-6" />
@@ -137,16 +137,11 @@ export function Nav() {
                 </Link>
               ))}
               <div className="pt-2">
-                <Button
+                <LanguageSwitcher 
+                  currentLanguage={language}
                   variant="link"
-                  className="text-primary transition-colors w-full "
-                  onClick={() => {
-                    setLanguage(language === "en" ? "ml" : "en");
-                    setMobileMenuOpen(false);
-                  }}
-                >
-                  {language === "en" ? "മലയാളം" : "English"}
-                </Button>
+                  className="text-primary transition-colors w-full"
+                />
               </div>
             </div>
           </div>

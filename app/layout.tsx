@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { Anek_Malayalam, Inter } from "next/font/google";
+import { getLanguage } from "@/lib/language-server";
 
 const anekMalayalam = Anek_Malayalam({
   subsets: ["latin"],
@@ -33,11 +34,13 @@ export default async function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const language = await getLanguage();
+  
   return (
-    <html className={`${inter.variable} ${anekMalayalam.variable}`}>
+    <html className={`${inter.variable} ${anekMalayalam.variable}`} lang={language}>
       <body className="smooth-scroll antialiased relative">
         <div className="absolute bg-gray-50 inset-0 opacity-[1] bg-[url('/grid-green.png')] bg-fixed bg-repeat bg-contain bg-center -z-10" />
-        <I18nProvider initialLanguage="ml">{children}</I18nProvider>
+        <I18nProvider language={language}>{children}</I18nProvider>
       </body>
     </html>
   );

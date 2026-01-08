@@ -1,0 +1,21 @@
+# Browser support for KeralaCare Landing
+# This affects CSS autoprefixing and transpilation
+
+# Global coverage
+>0.2%
+not dead
+not op_mini all
+
+# Specific browser versions
+IE 11
+Firefox ESR
+Chrome >= 60
+Safari >= 12
+Edge >= 18
+
+# Mobile browsers
+iOS >= 12
+Android >= 6
+
+# Support for users in regions with older devices
+Samsung >= 8

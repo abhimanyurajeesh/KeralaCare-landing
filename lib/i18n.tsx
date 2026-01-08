@@ -1,57 +1,20 @@
 "use client";
 
-import React, { createContext, useEffect, useState, useContext } from "react";
-import en from "@/locales/en.json";
-import ml from "@/locales/ml.json";
+import React, { createContext, useContext } from "react";
+import {
+  type Locale,
+  type Dictionary,
+  type TranslationKey,
+  type TranslationFunction,
+  type PathValue,
+  getDictionary,
+} from "./i18n-shared";
 
-const dictionaries = { en, ml } as const;
-
-export type Locale = keyof typeof dictionaries;
-export type Dictionary = typeof dictionaries.en;
-
-type Join<K, P> = K extends string | number
-  ? P extends string | number
-    ? `${K}${P extends "" ? "" : "."}${P}`
-    : never
-  : never;
-
-type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
-
-type Paths<T, D extends number = 10> = [D] extends [never]
-  ? never
-  : T extends object
-  ? {
-      [K in keyof T]-?: K extends string | number
-        ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
-        : never;
-    }[keyof T]
-  : "";
-
-export type TranslationKey = Paths<Dictionary>;
-
-// Get the type of a nested property in an object type using a dot-notation path
-type PathValue<T, P extends string> = P extends keyof T
-  ? T[P]
-  : P extends `${infer K}.${infer R}`
-  ? K extends keyof T
-    ? PathValue<T[K], R>
-    : never
-  : never;
-
-export const languages = [
-  { display: "English", code: "en" },
-  { display: "മലയാളം", code: "ml" },
-] as const satisfies { display: string; code: Locale }[];
-
-const getDictionary = (locale: Locale) => dictionaries[locale];
-
-type TranslationFunction = <K extends TranslationKey>(
-  key: K
-) => PathValue<Dictionary, K>;
+// Re-export types for convenience
+export type { Locale, Dictionary, TranslationKey, TranslationFunction };
 
 interface I18nContextType {
   language: Locale;
-  setLanguage: (lang: Locale) => void;
   t: TranslationFunction;
 }
 
@@ -61,26 +24,10 @@ export const I18nContext = createContext<I18nContextType | undefined>(
 
 interface I18nProviderProps {
   children: React.ReactNode;
-  initialLanguage?: Locale;
+  language: Locale;
 }
 
-export const I18nProvider = ({
-  children,
-  initialLanguage = "en",
-}: I18nProviderProps) => {
-  const [language, setLanguage] = useState<Locale>(initialLanguage);
-
-  useEffect(() => {
-    const storedLanguage = localStorage.getItem("language") as Locale;
-    if (storedLanguage) {
-      setLanguage(storedLanguage);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("language", language);
-  }, [language]);
-
+export const I18nProvider = ({ children, language }: I18nProviderProps) => {
   const currentDict = getDictionary(language);
   const englishDict = getDictionary("en");
 
@@ -98,7 +45,7 @@ export const I18nProvider = ({
   };
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={{ language, t }}>
       <div className={language === "ml" ? "font-malayalam" : "font-sans"}>
         {children}
       </div>
